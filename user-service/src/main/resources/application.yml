@@ -1,0 +1,14 @@
+spring:
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    #url: jdbc:postgresql://localhost:5432/cfdb
+    #username: cfuser
+    #password: cfpass
+
+  jpa:
+    #database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
