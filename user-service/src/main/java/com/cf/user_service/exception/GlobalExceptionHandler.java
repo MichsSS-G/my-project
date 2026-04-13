@@ -1,5 +1,6 @@
 package com.cf.user_service.exception;
 
+import exception.BaseException;
 import exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,12 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<ErrorResponse> handleBaseException(BaseException exception) {
+        ErrorResponse error = new ErrorResponse(exception.getMessage(), exception.getStatus().value(), LocalDateTime.now());
+        return new ResponseEntity<>(error, exception.getStatus());
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException exception) {
