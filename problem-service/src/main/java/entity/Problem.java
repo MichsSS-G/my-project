@@ -33,10 +33,6 @@ public class Problem {
 
     private LocalDateTime updatedAt;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
