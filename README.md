@@ -53,7 +53,7 @@ Controller → Service → Repository → Database
 
 ## Микросервисы
 
-### 👤 user-service
+### user-service
 - CRUD операции с пользователями
 - проверка уникальности email
 - глобальная обработка ошибок
