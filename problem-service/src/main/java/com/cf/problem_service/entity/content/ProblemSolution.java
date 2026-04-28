@@ -1,6 +1,6 @@
-package entity.content;
+package com.cf.problem_service.entity.content;
 
-import entity.enums.ProgrammingLanguage;
+import com.cf.problem_service.enums.ProgrammingLanguage;
 import jakarta.persistence.*;
 
 @Entity

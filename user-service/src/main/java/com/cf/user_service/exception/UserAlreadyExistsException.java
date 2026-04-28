@@ -1,6 +1,6 @@
 package com.cf.user_service.exception;
 
-import exception.BaseException;
+import com.cf.common.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 public class UserAlreadyExistsException extends BaseException {

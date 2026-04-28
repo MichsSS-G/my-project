@@ -95,7 +95,7 @@ Controller → Service → Repository → Database
 ## Как запустить микросервис пользователей
 
 ```bash
-git clone https://github.com/<your-username>/my-project.git
+git clone https://github.com/MichsSS-G/my-project.git
 cd my-project
 
 mvn clean install

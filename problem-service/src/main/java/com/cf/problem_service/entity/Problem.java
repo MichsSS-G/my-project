@@ -1,8 +1,8 @@
-package entity;
+package com.cf.problem_service.entity;
 
-import entity.enums.GeneralDifficulty;
-import entity.enums.IcpcDifficulty;
-import entity.enums.SchoolDifficulty;
+import com.cf.problem_service.enums.GeneralDifficulty;
+import com.cf.problem_service.enums.IcpcDifficulty;
+import com.cf.problem_service.enums.SchoolDifficulty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

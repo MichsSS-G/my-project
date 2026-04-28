@@ -1,4 +1,4 @@
-package exception;
+package com.cf.common.exception;
 
 import java.time.LocalDateTime;
 

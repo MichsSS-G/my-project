@@ -1,4 +1,4 @@
-package entity.enums;
+package com.cf.problem_service.enums;
 
 public enum SchoolDifficulty {
 

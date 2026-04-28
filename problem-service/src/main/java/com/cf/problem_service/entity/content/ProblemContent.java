@@ -1,4 +1,4 @@
-package entity.content;
+package com.cf.problem_service.entity.content;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

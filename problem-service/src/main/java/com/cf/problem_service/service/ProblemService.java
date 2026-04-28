@@ -1,9 +1,9 @@
-package service;
+package com.cf.problem_service.service;
 
-import entity.Problem;
+import com.cf.problem_service.entity.Problem;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import repository.ProblemRepository;
+import com.cf.problem_service.repository.ProblemRepository;
 
 import java.util.List;
 import java.util.Optional;

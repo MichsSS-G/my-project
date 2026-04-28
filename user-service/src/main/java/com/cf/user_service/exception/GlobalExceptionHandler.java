@@ -1,7 +1,7 @@
 package com.cf.user_service.exception;
 
-import exception.BaseException;
-import exception.ErrorResponse;
+import com.cf.common.exception.BaseException;
+import com.cf.common.exception.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
