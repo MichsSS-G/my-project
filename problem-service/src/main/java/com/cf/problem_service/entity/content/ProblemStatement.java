@@ -7,9 +7,6 @@ import jakarta.persistence.*;
 @Table(name = "problem_statements")
 public class ProblemStatement extends ProblemContent {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private Long problemId;
 
     @Enumerated(EnumType.STRING)

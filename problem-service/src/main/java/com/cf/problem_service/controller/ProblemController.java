@@ -40,20 +40,25 @@ public class ProblemController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProblem(@PathVariable Long id) {
-        problemService.deleteProblem(id);
+    public void deleteProblem(@PathVariable Long id, @RequestParam Long userId) {
+        problemService.deleteProblem(id, userId);
     }
 
     @PutMapping("/{id}")
-    public ProblemResponseDto updateProblem(@PathVariable Long id, @Valid @RequestBody ProblemRequestDto dto) {
-        Problem updatedProblem = problemService.updateProblem(id, mapToProblem(dto));
+    public ProblemResponseDto updateProblem(@PathVariable Long id, @RequestParam Long userId, @Valid @RequestBody ProblemRequestDto dto) {
+        Problem updatedProblem = problemService.updateProblem(id, userId, mapToProblem(dto));
         return mapToDto(updatedProblem);
     }
 
     @PatchMapping("/{id}")
-    public ProblemResponseDto patchProblem(@PathVariable Long id, @Valid @RequestBody ProblemPatchRequestDto dto) {
-        Problem patched = problemService.patchProblem(id, mapToProblem(dto));
+    public ProblemResponseDto patchProblem(@PathVariable Long id, @RequestParam Long userId, @Valid @RequestBody ProblemPatchRequestDto dto) {
+        Problem patched = problemService.patchProblem(id, userId, mapToProblem(dto));
         return mapToDto(patched);
+    }
+
+    @GetMapping("/{id}")
+    public ProblemResponseDto getProblemById(@PathVariable Long id, @RequestParam Long userId) {
+        return mapToDto(problemService.getProblemById(id, userId));
     }
 
     private ProblemResponseDto mapToDto(Problem problem) {
