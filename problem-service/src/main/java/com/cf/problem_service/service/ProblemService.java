@@ -55,4 +55,27 @@ public class ProblemService {
 
         return repository.save(current);
     }
+
+    @Transactional
+    public Problem patchProblem(Long id, Problem problem) {
+        Problem currentProblem = getProblemByIdOrThrow(id);
+
+        if (problem.getTitle() != null) {
+            currentProblem.setTitle(problem.getTitle());
+        }
+
+        if (problem.getGeneralDifficulty() != null) {
+            currentProblem.setGeneralDifficulty(problem.getGeneralDifficulty());
+        }
+
+        if (problem.getSchoolDifficulty() != null) {
+            currentProblem.setSchoolDifficulty(problem.getSchoolDifficulty());
+        }
+
+        if (problem.getIcpcDifficulty() != null) {
+            currentProblem.setIcpcDifficulty(problem.getIcpcDifficulty());
+        }
+
+        return repository.save(currentProblem);
+    }
 }

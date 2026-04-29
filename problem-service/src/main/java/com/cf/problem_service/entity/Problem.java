@@ -37,6 +37,10 @@ public class Problem {
         this.title = title;
     }
 
+    public void setOwnerId(Long id) {
+        ownerId = id;
+    }
+
     public void setSchoolDifficulty(SchoolDifficulty schoolDifficulty) {
         this.schoolDifficulty = schoolDifficulty;
     }
@@ -67,6 +71,10 @@ public class Problem {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
     }
 
     @PrePersist
