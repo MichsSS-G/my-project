@@ -47,8 +47,15 @@ public class ProblemService {
         return savedProblem;
     }
 
-    public List<Problem> getAllProblems() {
-        return repository.findAll();
+    @Transactional(readOnly = true)
+    public List<Problem> getAllProblems(Long userId) {
+        List<Long> problemIds = accessRepository.findAllByUserId(userId).stream().map(ProblemAccess::getProblemId).toList();
+
+        if (problemIds.isEmpty()) {
+            return List.of();
+        }
+
+        return repository.findAllByIdIn(problemIds);
     }
 
     public Problem getProblemById(Long id) {

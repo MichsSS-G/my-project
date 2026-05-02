@@ -5,10 +5,9 @@ import com.cf.problem_service.entity.Problem;
 import com.cf.problem_service.enums.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
 
 public interface ProblemAccessRepository extends JpaRepository<ProblemAccess, Long> {
 
@@ -21,4 +20,6 @@ public interface ProblemAccessRepository extends JpaRepository<ProblemAccess, Lo
     List<ProblemAccess> getProblemAccessesByUserId(Long userId);
 
     void deleteByProblemIdAndUserId(Long problemId, Long userId);
+
+    List<ProblemAccess> findAllByUserId(Long userId);
 }

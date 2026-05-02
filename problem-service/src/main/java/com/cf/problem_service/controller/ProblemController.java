@@ -22,8 +22,8 @@ public class ProblemController {
     }
 
     @GetMapping
-    public List<ProblemResponseDto> getAllProblems() {
-        return problemService.getAllProblems().stream().map(this::mapToDto).toList();
+    public List<ProblemResponseDto> getAllProblems(@RequestParam Long userId) {
+        return problemService.getAllProblems(userId).stream().map(this::mapToDto).toList();
     }
 
     @GetMapping("/{id}")
