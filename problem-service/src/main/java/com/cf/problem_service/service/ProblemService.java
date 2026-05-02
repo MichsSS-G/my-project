@@ -115,10 +115,7 @@ public class ProblemService {
     }
 
     private void checkCanRead(Long problemId, Long userId) {
-        ProblemAccess problemAccess = getAccessOrThrow(problemId, userId);
-        if (problemAccess.getRole() == null) {
-            throw new AccessDeniedException(NO_ACCESS_MESSAGE);
-        }
+        getAccessOrThrow(problemId, userId);
     }
 
     private void checkCanModify(Long problemId, Long userId) {
@@ -131,7 +128,7 @@ public class ProblemService {
     private void checkIsOwner(Long problemId, Long userId) {
         ProblemAccess problemAccess = getAccessOrThrow(problemId, userId);
         if (problemAccess.getRole() != Role.OWNER) {
-            throw new AccessDeniedException("You haven't got an owner role");
+            throw new AccessDeniedException("You haven't go t an owner role");
         }
     }
 
