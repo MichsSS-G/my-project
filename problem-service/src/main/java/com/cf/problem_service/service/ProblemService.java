@@ -58,52 +58,52 @@ public class ProblemService {
         return repository.findAllByIdIn(problemIds);
     }
 
-    public Problem getProblemById(Long id) {
-        return getProblemByIdOrThrow(id);
-    }
-
     @Transactional
     public void deleteProblem(Long id, Long userId) {
         Problem problem = getProblemByIdOrThrow(id);
         checkCanModify(id, userId);
         repository.delete(problem);
     }
+    
+    private Problem getProblemForModification(Long problemId, Long userId) {
+        Problem problem = getProblemByIdOrThrow(problemId);
+        checkCanModify(problemId, userId);
+        return problem;
+    }
 
     @Transactional
-    public Problem updateProblem(Long id, Long userId, Problem problem) {
-        Problem current = getProblemByIdOrThrow(id);
-        checkCanModify(id, userId);
+    public Problem updateProblem(Long problemId, Long userId, Problem source) {
+        Problem current = getProblemForModification(problemId, userId);
 
-        current.setTitle(problem.getTitle());
-        current.setIcpcDifficulty(problem.getIcpcDifficulty());
-        current.setSchoolDifficulty(problem.getSchoolDifficulty());
-        current.setGeneralDifficulty(problem.getGeneralDifficulty());
+        current.setTitle(source.getTitle());
+        current.setGeneralDifficulty(source.getGeneralDifficulty());
+        current.setSchoolDifficulty(source.getSchoolDifficulty());
+        current.setIcpcDifficulty(source.getIcpcDifficulty());
 
         return repository.save(current);
     }
 
     @Transactional
-    public Problem patchProblem(Long id, Long userId, Problem problem) {
-        Problem currentProblem = getProblemByIdOrThrow(id);
-        checkCanModify(id, userId);
+    public Problem patchProblem(Long problemId, Long userId, Problem source) {
+        Problem current = getProblemForModification(problemId, userId);
 
-        if (problem.getTitle() != null) {
-            currentProblem.setTitle(problem.getTitle());
+        if (source.getTitle() != null) {
+            current.setTitle(source.getTitle());
         }
 
-        if (problem.getGeneralDifficulty() != null) {
-            currentProblem.setGeneralDifficulty(problem.getGeneralDifficulty());
+        if (source.getGeneralDifficulty() != null) {
+            current.setGeneralDifficulty(source.getGeneralDifficulty());
         }
 
-        if (problem.getSchoolDifficulty() != null) {
-            currentProblem.setSchoolDifficulty(problem.getSchoolDifficulty());
+        if (source.getSchoolDifficulty() != null) {
+            current.setSchoolDifficulty(source.getSchoolDifficulty());
         }
 
-        if (problem.getIcpcDifficulty() != null) {
-            currentProblem.setIcpcDifficulty(problem.getIcpcDifficulty());
+        if (source.getIcpcDifficulty() != null) {
+            current.setIcpcDifficulty(source.getIcpcDifficulty());
         }
 
-        return repository.save(currentProblem);
+        return repository.save(current);
     }
 
     private ProblemAccess getAccessOrThrow(Long problemId, Long userId) {

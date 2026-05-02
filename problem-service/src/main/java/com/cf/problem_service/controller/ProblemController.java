@@ -26,11 +26,6 @@ public class ProblemController {
         return problemService.getAllProblems(userId).stream().map(this::mapToDto).toList();
     }
 
-    @GetMapping("/{id}")
-    public ProblemResponseDto getProblemById(@PathVariable Long id) {
-        return mapToDto(problemService.getProblemById(id));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProblemResponseDto createProblem(@Valid @RequestBody ProblemRequestDto problemRequestDto) {
