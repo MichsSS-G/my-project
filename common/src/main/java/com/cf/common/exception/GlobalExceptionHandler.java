@@ -1,12 +1,15 @@
-package com.cf.user_service.exception;
+package com.cf.common.exception;
 
 import com.cf.common.exception.BaseException;
 import com.cf.common.exception.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.xml.crypto.Data;
 import java.time.LocalDateTime;
 
 @ControllerAdvice
@@ -16,18 +19,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleBaseException(BaseException exception) {
         ErrorResponse error = new ErrorResponse(exception.getMessage(), exception.getStatus().value(), LocalDateTime.now());
         return new ResponseEntity<>(error, exception.getStatus());
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException exception) {
-        ErrorResponse error = new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateEmail(UserAlreadyExistsException exception) {
-        ErrorResponse error = new ErrorResponse(exception.getMessage(), HttpStatus.CONFLICT.value(), LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -44,6 +35,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGeneral(Exception exception) {
         ErrorResponse error = new ErrorResponse("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR.value(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolate(DataIntegrityViolationException exception) {
+        ErrorResponse error = new ErrorResponse("Data integrity violation", HttpStatus.CONTINUE.value(), LocalDateTime.now());
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
 }
