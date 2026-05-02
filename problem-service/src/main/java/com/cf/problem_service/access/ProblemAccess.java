@@ -4,7 +4,10 @@ import com.cf.problem_service.enums.Role;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "problem_accesses")
+@Table(
+        name = "problem_accesses",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"problem_id", "user_id"})
+)
 public class ProblemAccess {
 
     @Id
