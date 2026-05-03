@@ -128,7 +128,7 @@ public class ProblemService {
     private void checkIsOwner(Long problemId, Long userId) {
         ProblemAccess problemAccess = getAccessOrThrow(problemId, userId);
         if (problemAccess.getRole() != Role.OWNER) {
-            throw new AccessDeniedException("You haven't go t an owner role");
+            throw new AccessDeniedException("You haven't got an owner role");
         }
     }
 
