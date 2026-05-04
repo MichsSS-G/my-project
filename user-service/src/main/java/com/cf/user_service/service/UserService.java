@@ -67,9 +67,6 @@ public class UserService {
     @Transactional
     public User patchUser(Long id, User patchedUser) {
         User user = getUserByIdOrThrow(id);
-        if (!user.getEmail().equals(patchedUser.getEmail()) && userRepository.existsByEmail(patchedUser.getEmail())) {
-            throw new UserAlreadyExistsException(duplicateEmailMessage);
-        }
         if (patchedUser.getName() != null) {
             user.setName(patchedUser.getName());
         }
@@ -77,6 +74,9 @@ public class UserService {
             user.setSurname(patchedUser.getSurname());
         }
         if (patchedUser.getEmail() != null) {
+            if (!user.getEmail().equals(patchedUser.getEmail()) && userRepository.existsByEmail(patchedUser.getEmail())) {
+                throw new UserAlreadyExistsException(duplicateEmailMessage);
+            }
             user.setEmail(patchedUser.getEmail());
         }
         return userRepository.save(user);

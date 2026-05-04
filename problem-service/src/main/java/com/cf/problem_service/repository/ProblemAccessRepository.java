@@ -22,4 +22,6 @@ public interface ProblemAccessRepository extends JpaRepository<ProblemAccess, Lo
     void deleteByProblemIdAndUserId(Long problemId, Long userId);
 
     List<ProblemAccess> findAllByUserId(Long userId);
+
+    void deleteAllByProblemId(Long id);
 }

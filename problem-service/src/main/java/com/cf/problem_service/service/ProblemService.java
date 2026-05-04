@@ -62,6 +62,7 @@ public class ProblemService {
     public void deleteProblem(Long id, Long userId) {
         Problem problem = getProblemByIdOrThrow(id);
         checkCanModify(id, userId);
+        accessRepository.deleteAllByProblemId(id);
         repository.delete(problem);
     }
     
