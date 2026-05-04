@@ -3,8 +3,9 @@ package com.cf.problem_service.controller;
 import java.util.List;
 
 import com.cf.problem_service.dto.ProblemPatchRequestDto;
-import com.cf.problem_service.dto.ProblemRequestDto;
+import com.cf.problem_service.dto.ProblemCreateRequestDto;
 import com.cf.problem_service.dto.ProblemResponseDto;
+import com.cf.problem_service.dto.ProblemUpdateRequestDto;
 import com.cf.problem_service.entity.Problem;
 import com.cf.problem_service.service.ProblemService;
 import jakarta.validation.Valid;
@@ -28,8 +29,8 @@ public class ProblemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProblemResponseDto createProblem(@Valid @RequestBody ProblemRequestDto problemRequestDto) {
-        Problem created = problemService.createProblem(mapToProblem(problemRequestDto));
+    public ProblemResponseDto createProblem(@Valid @RequestBody ProblemCreateRequestDto problemCreateRequestDto) {
+        Problem created = problemService.createProblem(mapToProblem(problemCreateRequestDto));
         return mapToDto(created);
     }
 
@@ -40,7 +41,7 @@ public class ProblemController {
     }
 
     @PutMapping("/{id}")
-    public ProblemResponseDto updateProblem(@PathVariable Long id, @RequestParam Long userId, @Valid @RequestBody ProblemRequestDto dto) {
+    public ProblemResponseDto updateProblem(@PathVariable Long id, @RequestParam Long userId, @Valid @RequestBody ProblemUpdateRequestDto dto) {
         Problem updatedProblem = problemService.updateProblem(id, userId, mapToProblem(dto));
         return mapToDto(updatedProblem);
     }
@@ -60,7 +61,7 @@ public class ProblemController {
         return new ProblemResponseDto(problem.getId(), problem.getOwnerId(), problem.getTitle());
     }
 
-    private Problem mapToProblem(ProblemRequestDto dto) {
+    private Problem mapToProblem(ProblemCreateRequestDto dto) {
         Problem problem = new Problem();
 
         problem.setOwnerId(dto.getOwnerId());
@@ -79,6 +80,17 @@ public class ProblemController {
         problem.setIcpcDifficulty(dto.getIcpcDifficulty());
         problem.setSchoolDifficulty(dto.getSchoolDifficulty());
         problem.setGeneralDifficulty(dto.getGeneralDifficulty());
+
+        return problem;
+    }
+
+    private Problem mapToProblem(ProblemUpdateRequestDto dto) {
+        Problem problem = new Problem();
+
+        problem.setTitle(dto.getTitle());
+        problem.setGeneralDifficulty(dto.getGeneralDifficulty());
+        problem.setIcpcDifficulty(dto.getIcpcDifficulty());
+        problem.setSchoolDifficulty(dto.getSchoolDifficulty());
 
         return problem;
     }
