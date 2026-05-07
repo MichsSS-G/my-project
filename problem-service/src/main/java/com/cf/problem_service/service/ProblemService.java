@@ -18,6 +18,7 @@ import java.util.Optional;
 public class ProblemService {
 
     private final static String NO_ACCESS_MESSAGE = "You have no access to this problem";
+    private final static String NO_OWNER_ROLE_MESSAGE = "You haven't got an owner role";
 
     private final ProblemRepository repository;
 
@@ -59,10 +60,10 @@ public class ProblemService {
     }
 
     @Transactional
-    public void deleteProblem(Long id, Long userId) {
-        Problem problem = getProblemByIdOrThrow(id);
-        checkCanModify(id, userId);
-        accessRepository.deleteAllByProblemId(id);
+    public void deleteProblem(Long problemId, Long userId) {
+        Problem problem = getProblemByIdOrThrow(problemId);
+        checkIsOwner(problemId, userId);
+        accessRepository.deleteAllByProblemId(problemId);
         repository.delete(problem);
     }
     
@@ -129,14 +130,14 @@ public class ProblemService {
     private void checkIsOwner(Long problemId, Long userId) {
         ProblemAccess problemAccess = getAccessOrThrow(problemId, userId);
         if (problemAccess.getRole() != Role.OWNER) {
-            throw new AccessDeniedException("You haven't got an owner role");
+            throw new AccessDeniedException(NO_OWNER_ROLE_MESSAGE);
         }
     }
 
     @Transactional(readOnly = true)
-    public Problem getProblemById(Long id, Long userId) {
-        Problem problem = getProblemByIdOrThrow(id);
-        checkCanRead(id, userId);
+    public Problem getProblemById(Long problemId, Long userId) {
+        Problem problem = getProblemByIdOrThrow(problemId);
+        checkCanRead(problemId, userId);
         return problem;
     }
 }
