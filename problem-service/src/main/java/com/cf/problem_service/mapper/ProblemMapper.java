@@ -11,7 +11,13 @@ import org.springframework.stereotype.Component;
 public class ProblemMapper {
 
     public ProblemResponseDto mapToDto(Problem problem) {
-        return new ProblemResponseDto(problem.getId(), problem.getOwnerId(), problem.getTitle());
+        return new ProblemResponseDto(
+                problem.getId(),
+                problem.getOwnerId(),
+                problem.getTitle(),
+                problem.getGeneralDifficulty(),
+                problem.getIcpcDifficulty(),
+                problem.getSchoolDifficulty());
     }
 
     public Problem mapToProblem(ProblemCreateRequestDto dto) {
