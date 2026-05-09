@@ -1,14 +1,18 @@
 package com.cf.user_service.controller;
 
-import com.cf.user_service.dto.PatchUserDto;
+import com.cf.user_service.dto.UserPatchRequestDto;
 import com.cf.user_service.dto.UserRequestDto;
 import com.cf.user_service.dto.UserResponseDto;
-import com.cf.user_service.dto.UpdateUserRequestDto;
+import com.cf.user_service.dto.UserUpdateRequestDto;
 import com.cf.user_service.entity.User;
 import com.cf.user_service.service.UserService;
+import com.cf.user_service.mapper.UserMapper;
+
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
 @RestController
@@ -17,26 +21,29 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final UserMapper userMapper;
+
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponseDto createUser(@Valid @RequestBody UserRequestDto dto) {
-        User user = mapToEntity(dto);
+        User user = userMapper.mapToUser(dto);
         User savedUser = userService.createUser(user);
-        return mapToDto(savedUser);
+        return userMapper.mapToDto(savedUser);
     }
 
     @GetMapping
     public List<UserResponseDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(this::mapToDto).toList();
+        return userService.getAllUsers().stream().map(userMapper::mapToDto).toList();
     }
 
     @GetMapping("/{id}")
     public UserResponseDto getUserById(@PathVariable Long id) {
-        return mapToDto(userService.getUserById(id));
+        return userMapper.mapToDto(userService.getUserById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -46,30 +53,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public UserResponseDto updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequestDto dto) {
-        User updatedUser = userService.updateUser(id, mapToEntity(dto));
-        return mapToDto(updatedUser);
+    public UserResponseDto updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateRequestDto dto) {
+        User updatedUser = userService.updateUser(id, userMapper.mapToUser(dto));
+        return userMapper.mapToDto(updatedUser);
     }
 
     @PatchMapping("/{id}")
-    public UserResponseDto patchUser(@PathVariable Long id, @RequestBody PatchUserDto dto) {
-        User patchedUser = userService.patchUser(id, mapToEntity(dto));
-        return mapToDto(patchedUser);
-    }
-
-    private UserResponseDto mapToDto(User user) {
-        return new UserResponseDto(user.getId(), user.getName(), user.getSurname(), user.getEmail());
-    }
-
-    private User mapToEntity(UserRequestDto dto) {
-        return new User(dto.getName(), dto.getSurname(), dto.getEmail());
-    }
-
-    private User mapToEntity(UpdateUserRequestDto dto) {
-        return new User(dto.getName(), dto.getSurname(), dto.getEmail());
-    }
-
-    private User mapToEntity(PatchUserDto dto) {
-        return new User(dto.getName(), dto.getSurname(), dto.getEmail());
+    public UserResponseDto patchUser(@PathVariable Long id, @Valid @RequestBody UserPatchRequestDto dto) {
+        User patchedUser = userService.patchUser(id, userMapper.mapToUser(dto));
+        return userMapper.mapToDto(patchedUser);
     }
 }

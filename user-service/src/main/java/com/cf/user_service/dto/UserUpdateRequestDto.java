@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
 
-public class UpdateUserRequestDto {
+public class UserUpdateRequestDto {
     @NotBlank(message = "Name can't be empty")
     @Size(min = 2, max = 50, message = "Length of name must be between 2 and 50")
     private String name;
@@ -17,7 +17,7 @@ public class UpdateUserRequestDto {
     @Email(message = "Email must be valid")
     private String email;
 
-     public UpdateUserRequestDto(String name, String surname, String email) {
+     public UserUpdateRequestDto(String name, String surname, String email) {
          this.name = name;
          this.surname = surname;
          this.email = email;

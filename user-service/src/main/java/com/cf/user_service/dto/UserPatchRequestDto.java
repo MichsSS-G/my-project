@@ -3,7 +3,7 @@ package com.cf.user_service.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
-public class PatchUserDto {
+public class UserPatchRequestDto {
 
     @Size(min = 2, max = 50, message = "Length of name must be between 2 and 50")
     private String name;
@@ -14,7 +14,7 @@ public class PatchUserDto {
     @Email(message = "Email must be valid")
     private String email;
 
-    public PatchUserDto(String name, String surname, String email) {
+    public UserPatchRequestDto(String name, String surname, String email) {
         this.name = name;
         this.surname = surname;
         this.email = email;

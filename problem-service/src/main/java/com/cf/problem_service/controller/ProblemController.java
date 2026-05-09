@@ -8,6 +8,7 @@ import com.cf.problem_service.dto.ProblemResponseDto;
 import com.cf.problem_service.dto.ProblemUpdateRequestDto;
 import com.cf.problem_service.entity.Problem;
 import com.cf.problem_service.service.ProblemService;
+import com.cf.problem_service.mapper.ProblemMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,21 +18,24 @@ import org.springframework.web.bind.annotation.*;
 public class ProblemController {
 
     private final ProblemService problemService;
+    
+    private final ProblemMapper problemMapper;
 
-    public ProblemController(ProblemService problemService) {
+    public ProblemController(ProblemService problemService, ProblemMapper problemMapper) {
         this.problemService = problemService;
+        this.problemMapper = problemMapper;
     }
 
     @GetMapping
     public List<ProblemResponseDto> getAllProblems(@RequestParam Long userId) {
-        return problemService.getAllProblems(userId).stream().map(this::mapToDto).toList();
+        return problemService.getAllProblems(userId).stream().map(problemMapper::mapToDto).toList();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProblemResponseDto createProblem(@Valid @RequestBody ProblemCreateRequestDto problemCreateRequestDto) {
-        Problem created = problemService.createProblem(mapToProblem(problemCreateRequestDto));
-        return mapToDto(created);
+        Problem created = problemService.createProblem(problemMapper.mapToProblem(problemCreateRequestDto));
+        return problemMapper.mapToDto(created);
     }
 
     @DeleteMapping("/{id}")
@@ -42,56 +46,18 @@ public class ProblemController {
 
     @PutMapping("/{id}")
     public ProblemResponseDto updateProblem(@PathVariable Long id, @RequestParam Long userId, @Valid @RequestBody ProblemUpdateRequestDto dto) {
-        Problem updatedProblem = problemService.updateProblem(id, userId, mapToProblem(dto));
-        return mapToDto(updatedProblem);
+        Problem updatedProblem = problemService.updateProblem(id, userId, problemMapper.mapToProblem(dto));
+        return problemMapper.mapToDto(updatedProblem);
     }
 
     @PatchMapping("/{id}")
     public ProblemResponseDto patchProblem(@PathVariable Long id, @RequestParam Long userId, @Valid @RequestBody ProblemPatchRequestDto dto) {
-        Problem patched = problemService.patchProblem(id, userId, mapToProblem(dto));
-        return mapToDto(patched);
+        Problem patched = problemService.patchProblem(id, userId, problemMapper.mapToProblem(dto));
+        return problemMapper.mapToDto(patched);
     }
 
     @GetMapping("/{id}")
     public ProblemResponseDto getProblemById(@PathVariable Long id, @RequestParam Long userId) {
-        return mapToDto(problemService.getProblemById(id, userId));
-    }
-
-    private ProblemResponseDto mapToDto(Problem problem) {
-        return new ProblemResponseDto(problem.getId(), problem.getOwnerId(), problem.getTitle());
-    }
-
-    private Problem mapToProblem(ProblemCreateRequestDto dto) {
-        Problem problem = new Problem();
-
-        problem.setOwnerId(dto.getOwnerId());
-        problem.setTitle(dto.getTitle());
-        problem.setIcpcDifficulty(dto.getIcpcDifficulty());
-        problem.setSchoolDifficulty(dto.getSchoolDifficulty());
-        problem.setGeneralDifficulty(dto.getGeneralDifficulty());
-
-        return problem;
-    }
-
-    private Problem mapToProblem(ProblemPatchRequestDto dto) {
-        Problem problem = new Problem();
-
-        problem.setTitle(dto.getTitle());
-        problem.setIcpcDifficulty(dto.getIcpcDifficulty());
-        problem.setSchoolDifficulty(dto.getSchoolDifficulty());
-        problem.setGeneralDifficulty(dto.getGeneralDifficulty());
-
-        return problem;
-    }
-
-    private Problem mapToProblem(ProblemUpdateRequestDto dto) {
-        Problem problem = new Problem();
-
-        problem.setTitle(dto.getTitle());
-        problem.setGeneralDifficulty(dto.getGeneralDifficulty());
-        problem.setIcpcDifficulty(dto.getIcpcDifficulty());
-        problem.setSchoolDifficulty(dto.getSchoolDifficulty());
-
-        return problem;
+        return problemMapper.mapToDto(problemService.getProblemById(id, userId));
     }
 }
