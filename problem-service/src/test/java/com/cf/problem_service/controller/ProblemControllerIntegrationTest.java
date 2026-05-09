@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,13 +52,8 @@ class ProblemControllerIntegrationTest {
     @Test
     @DisplayName("POST /problems should create problem and return 201")
     void createProblemShouldReturnCreatedProblem() throws Exception {
-        Map<String, Object> requestBody = Map.of(
-                "title", "Two Sum",
-                "ownerId", 1L,
-                "generalDifficulty", "EASY",
-                "schoolDifficulty", "SCHOOL",
-                "icpcDifficulty", "QUALIFICATION"
-        );
+        Map<String, Object> requestBody = createProblemRequestBody("Two Sum", 1L,
+                "EASY", "QUALIFICATION", "SCHOOL");
 
         mockMvc.perform(post("/problems")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -65,7 +61,10 @@ class ProblemControllerIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").value("Two Sum"))
-                .andExpect(jsonPath("$.ownerId").value(1));
+                .andExpect(jsonPath("$.ownerId").value(1))
+                .andExpect(jsonPath("$.generalDifficulty").value("EASY"))
+                .andExpect(jsonPath("$.icpcDifficulty").value("QUALIFICATION"))
+                .andExpect(jsonPath("$.schoolDifficulty").value("SCHOOL"));
     }
 
     @Test
@@ -151,13 +150,8 @@ class ProblemControllerIntegrationTest {
     @Test
     @DisplayName("POST /problems should return 400 when enum value is invalid")
     void createProblemShouldReturnBadRequestWhenEnumIsInvalid() throws Exception {
-        Map<String, Object> requestBody = Map.of(
-                "title", "Two Sum",
-                "ownerId", 1L,
-                "generalDifficulty", "INVALID",
-                "schoolDifficulty", "SCHOOL",
-                "icpcDifficulty", "QUALIFICATION"
-        );
+        Map<String, Object> requestBody = createProblemRequestBody("Sum", 1L,
+                "INVALID", "QUALIFICATION", "SCHOOL");
 
         mockMvc.perform(post("/problems")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -166,14 +160,56 @@ class ProblemControllerIntegrationTest {
                 .andExpect(jsonPath("$.status").value(400));
     }
 
-    private Long createProblemAndReturnId(Long ownerId) throws Exception {
-        Map<String, Object> requestBody = Map.of(
-                "title", "Two Sum",
-                "ownerId", ownerId,
-                "generalDifficulty", "EASY",
-                "schoolDifficulty", "SCHOOL",
-                "icpcDifficulty", "QUALIFICATION"
+    @Test
+    @DisplayName("PUT /problems/{id} should fully update problem when user is owner")
+    void updateProblemShouldFullyUpdateProblemWhenUserIsOwner() throws Exception {
+        Long problemId = createProblemAndReturnId(1L);
+
+        Map<String, Object> requestBody = createProblemRequestBody(
+                "Updated Two Sum",
+                1L,
+                "HARD",
+                "QUARTER_FINAL",
+                "MUNICIPAL"
         );
+
+        mockMvc.perform(put("/problems/{id}", problemId)
+                        .param("userId", "1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(problemId))
+                .andExpect(jsonPath("$.title").value("Updated Two Sum"))
+                .andExpect(jsonPath("$.ownerId").value(1))
+                .andExpect(jsonPath("$.generalDifficulty").value("HARD"))
+                .andExpect(jsonPath("$.icpcDifficulty").value("QUARTER_FINAL"))
+                .andExpect(jsonPath("$.schoolDifficulty").value("MUNICIPAL"));
+    }
+
+    @Test
+    @DisplayName("PUT /problems/{id} should return 403 when user has no access")
+    void updateProblemShouldReturnForbiddenWhenUserHasNoAccess() throws Exception {
+        Long problemId = createProblemAndReturnId(1L);
+
+        Map<String, Object> requestBody = createProblemRequestBody(
+                "Updated Two Sum",
+                1L,
+                "HARD",
+                "QUARTER_FINAL",
+                "MUNICIPAL"
+        );
+
+        mockMvc.perform(put("/problems/{id}", problemId)
+                        .param("userId", "999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestBody)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403));
+    }
+
+    private Long createProblemAndReturnId(Long ownerId) throws Exception {
+        Map<String, Object> requestBody = createProblemRequestBody("Two Sum", ownerId,
+                "EASY", "QUALIFICATION", "SCHOOL");
 
         String response = mockMvc.perform(post("/problems")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -186,5 +222,21 @@ class ProblemControllerIntegrationTest {
         JsonNode jsonNode = objectMapper.readTree(response);
 
         return jsonNode.get("id").asLong();
+    }
+
+    private Map<String, Object> createProblemRequestBody(
+            String title,
+            Long ownerId,
+            String generalDifficulty,
+            String icpcDifficulty,
+            String schoolDifficulty) {
+
+        return Map.of(
+                "title", title,
+                "ownerId", ownerId,
+                "generalDifficulty", generalDifficulty,
+                "icpcDifficulty", icpcDifficulty,
+                "schoolDifficulty", schoolDifficulty
+        );
     }
 }
